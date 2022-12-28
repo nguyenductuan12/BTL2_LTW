@@ -1,0 +1,192 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Book Management System</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<th:block th:if="${userdto.email}">
+		<!--Start : Header    -->
+		<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+			<!-- Brand -->
+			<a class="navbar-brand" th:href="@{/books}">Systems Managements
+				Books</a>
+
+			<!-- Toggler/collapsibe Button -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Navbar links -->
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" th:href="@{/books}">Home</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!--End : Header    -->
+		<br>
+		<br>
+		<h1 class="text-center">Sách</h1>
+		<br>
+		<div class="container">
+			<form th:action="@{/books/{id} (id=${book.id})}" th:object="${book}"
+				method="post" enctype="multipart/form-data">
+
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6 justify-content-left">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label class="font-weight-bold">Tiêu đề</label> <input
+										type="text" name="title" th:field="*{title}"
+										class="form-control" />
+									<p class="alert alert-danger"
+										th:if="${#fields.hasErrors('title')}" th:errorclass="error"
+										th:errors="*{title}" />
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label class="font-weight-bold">Tác giả</label> <input
+										type="text" name="author" th:field="*{author}"
+										class="form-control" />
+									<p class="alert alert-danger"
+										th:if="${#fields.hasErrors('author')}" th:errorclass="error"
+										th:errors="*{author}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="form-group">
+									<label class="font-weight-bold">Mô tả</label>
+									<textarea rows="4" class="form-control" th:field="*{describes}"></textarea>
+									<p class="alert alert-info"
+										th:if="${#fields.hasErrors('describes')}"
+										th:errorclass="error" th:errors="*{describes}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label class="font-weight-bold">Ngày phát hành</label> <input
+										type="date" name="releaseDate" th:field="*{releaseDate}"
+										class="form-control" />
+									<p class="alert alert-danger"
+										th:if="${#fields.hasErrors('releaseDate')}"
+										th:errorclass="error" th:errors="*{releaseDate}" />
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label class="font-weight-bold">Số trang</label> <input
+										type="number" name="numberOfPages" th:field="*{numberOfPages}"
+										class="form-control" />
+									<p class="alert alert-danger"
+										th:if="${#fields.hasErrors('numberOfPages')}"
+										th:errorclass="error" th:errors="*{numberOfPages}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label class="font-weight-bold">Giá sách</label> <input
+										type="number" name="price" th:field="*{price}"
+										class="form-control" />
+									<p class="alert alert-danger"
+										th:if="${#fields.hasErrors('price')}"
+										th:errorclass="error" th:errors="*{price}" />
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="category" class="font-weight-bold">Thể loại</label>
+									<select class="form-control" name="category">
+										<option th:value="${book.category}" th:text=${book.category}
+											selected="selected"></option>
+										<option value="Châm biến">Châm biến</option>
+										<option value="Tiểu thuyết">Tiểu thuyết</option>
+										<option value="Trinh thám">Trinh thám</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+					<div
+						class="col-lg-6 col-md-6 col-sm-6 container justify-content-right card">
+						<p>
+							<label class="font-weight-bold">BookImg: </label> <input
+								type="file" name="fileImage" id="fileImage"
+								accept="image/png, image/jpeg" />
+						</p>
+						 <a th:if="${book.id}" th:href="@{/book/image/{id}(id=${book.id})}">remove image</a>
+						<a th:unless="${book.id}" href="javascript:setImageVisible('thumbnail')">remove image</a>
+						<img id="thumbnail" th:src="@{${book.photosImagePath}}" />
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="float-right">
+							<button th:unless="${book.id}" type="submit"
+								class="btn btn-primary" id="add">Add</button>
+						</div>
+						<div class="float-right" th:if="${book.id}">
+							<button type="submit" class="btn btn-primary">Edit</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<br>
+		</div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#fileImage').change(function() {
+					showImageThumbnail(this);
+				});
+			});
+
+			function showImageThumbnail(fileInput) {
+				file = fileInput.files[0];
+				reader = new FileReader();
+
+				reader.onload = function(e) {
+					$('#thumbnail').attr('src', e.target.result);
+				};
+				reader.readAsDataURL(file);
+			}
+			function setImageVisible(id) {
+				var img = document.getElementById(id);
+				img.src = '';
+				var file = document.getElementById("fileImage");
+				file.value = null;
+			}
+		</script>
+	</th:block>
+</body>
+
+</html>
